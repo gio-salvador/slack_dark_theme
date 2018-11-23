@@ -68,6 +68,8 @@ function edit_slack_file(){
   then
     sudo gsed -i '$ d' "$slack_edit"
     echo "$lines" | sudo tee -a "$slack_edit" > /dev/null
+    osascript -e 'tell application "Slack" to quit'
+    open -a "Slack"
   else
     echo -e "WARNING: Changes failed to apply because they're already present!"
     exit 1
