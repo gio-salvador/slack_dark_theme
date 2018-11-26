@@ -60,6 +60,7 @@ function edit_slack_file(){
     sudo gsed -i '$ d' "$slack_edit"
     echo "$lines" | sudo tee -a "$slack_edit" > /dev/null
     osascript -e 'tell application "Slack" to quit'
+    sleep 3
     open -a "Slack"
     # Display how to roll back
     echo -e """
