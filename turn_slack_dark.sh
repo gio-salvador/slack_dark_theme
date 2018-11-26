@@ -50,17 +50,8 @@ function install_gnu_sed_if_absent() {
 
 function edit_slack_file(){
   # Make backup of file to be edited.
-  DATE=`date +%Y-%m-%d`
+  DATE=`date +%Y-%m-%d_%H.%M.%S`
   sudo cp $slack_edit $slack_edit.$DATE
-
-  # Display how to roll back
-  echo -e """
-  In case you need to roll back, just run:
-
-  slack_edit='/Applications/Slack.app/Contents/Resources/app.asar.unpacked/src/static/ssb-interop.js'
-  sudo cp $slack_edit.$DATE $slack_edit
-  unset slack_edit
-  """
 
   # Make the changes for dark mode if not present, by checking if the link to the
   # CSS file is present.
@@ -70,6 +61,14 @@ function edit_slack_file(){
     echo "$lines" | sudo tee -a "$slack_edit" > /dev/null
     osascript -e 'tell application "Slack" to quit'
     open -a "Slack"
+    # Display how to roll back
+    echo -e """
+    In case you need to roll back, just run:
+
+    slack_edit='/Applications/Slack.app/Contents/Resources/app.asar.unpacked/src/static/ssb-interop.js'
+    sudo cp \$slack_edit.$DATE \$slack_edit
+    unset slack_edit
+    """
   else
     echo -e "WARNING: Changes failed to apply because they're already present!"
     exit 1
