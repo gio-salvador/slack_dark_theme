@@ -48,6 +48,17 @@ function install_gnu_sed_if_absent() {
   fi
 }
 
+function rollback_setup(){
+  SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+  # Display how to roll back
+  echo -e """#!/bin/bash
+
+slack_edit='/Applications/Slack.app/Contents/Resources/app.asar.unpacked/src/static/ssb-interop.js'
+sudo cp \$slack_edit.$DATE \$slack_edit
+unset slack_edit""" > $SCRIPTPATH/turn_slack_back.sh
+  echo -e "INFO: To reverse settings, just run: \n bash $SCRIPTPATH/turn_slack_back.sh"
+}
+
 function edit_slack_file(){
   # Make backup of file to be edited.
   DATE=`date +%Y-%m-%d_%H.%M.%S`
@@ -62,14 +73,7 @@ function edit_slack_file(){
     osascript -e 'tell application "Slack" to quit'
     sleep 3
     open -a "Slack"
-    # Display how to roll back
-    echo -e """
-    In case you need to roll back, just run:
-
-    slack_edit='/Applications/Slack.app/Contents/Resources/app.asar.unpacked/src/static/ssb-interop.js'
-    sudo cp \$slack_edit.$DATE \$slack_edit
-    unset slack_edit
-    """
+    rollback_setup
   else
     echo -e "WARNING: Changes failed to apply because they're already present!"
     exit 1
