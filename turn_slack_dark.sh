@@ -25,29 +25,6 @@ function set_vars() {
   #echo $lines
 }
 
-function install_gnu_sed_if_absent() {
-  # Check gnu-sed is installed
-  if [ "$(which gsed | wc -l)" == "0" ]
-  then
-    brew install gsed
-  fi
-
-  # Check gnu-sed PATHS are correct
-  gnubin='export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"'
-  if ! grep -Fxq "$gnubin" ~/.bash_profile
-  then
-    echo "$gnubin" >> ~/.bash_profile
-    source ~/.bash_profile
-  fi
-  # This is not required, but it stes the path to 'man gsed'
-  gnuman='export MANPATH="/usr/local/opt/gnu-sed/libexec/gnuman:$MANPATH"'
-  if ! grep -Fxq "$gnuman" ~/.bash_profile
-  then
-    echo "$gnuman" >> ~/.bash_profile
-    source ~/.bash_profile
-  fi
-}
-
 function rollback_setup(){
   SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
   # Display how to roll back
@@ -68,7 +45,7 @@ function edit_slack_file(){
   # CSS file is present.
   if ! grep -q "$css_link" "$slack_edit"
   then
-    sudo gsed -i '$ d' "$slack_edit"
+    sed -i '' -e '$ d' "$slack_edit"
     echo "$lines" | sudo tee -a "$slack_edit" > /dev/null
     osascript -e 'tell application "Slack" to quit'
     sleep 3
@@ -91,11 +68,6 @@ function main(){
   # Set necessary vars
   # Future note, if necessary make them arguments
   set_vars
-
-  # gnu-sed is needed to delete the last line of the file which is the closing }
-  # Therefore on the following function it installs gnu-sed is not installed,
-  # possibly adding a debug function and a run quiet function.
-  install_gnu_sed_if_absent
 
   # Function to actually modify the file.
   edit_slack_file
