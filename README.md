@@ -9,4 +9,4 @@ In order to automate the intallation, just clone the repo and run the bash scrip
 Be aware that gnu-sed is required and it will attempt to install it using **brew** if you don't have it.
 
 CSS theme copied from:
-https://cdn.rawgit.com/laCour/slack-night-mode/master/css/raw/black.css
+https://cdn.jsdelivr.net/gh/laCour/slack-night-mode@master/css/raw/black.css
