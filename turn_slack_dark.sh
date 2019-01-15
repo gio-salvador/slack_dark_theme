@@ -29,7 +29,7 @@ function install_gnu_sed_if_absent() {
   # Check gnu-sed is installed
   if [ "$(which gsed | wc -l)" == "0" ]
   then
-    brew install gsed
+    brew install gnu-sed
   fi
 
   # Check gnu-sed PATHS are correct
